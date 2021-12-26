@@ -1,5 +1,5 @@
 import pygame
-
+#KOmentarz do testów ;)
 pygame.init()
 
 width = 1280
