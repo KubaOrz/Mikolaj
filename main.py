@@ -10,8 +10,8 @@ height = 720
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 
-bg1 = bg.background(0, 0)
-bg2 = bg.background(bg1.img.get_width(), 0)
+bg1 = bg.background(0, 0, width, height)
+bg2 = bg.background(bg1.img.get_width(), 0, width, height)
 
 class FlyingObject:
     def __init__(self, x, y, img):
@@ -125,14 +125,14 @@ while running:
                 harness[0].down = False
                 harness[0].align = True
 
+    #Przesuwanie tła
     bg1.slide(screen)
     bg2.slide(screen)
 
-    if bg1.x < -bg1.img.get_width():
-        bg2.wrap(bg1.x + bg1.img.get_width())
-
-    if bg2.x < -bg2.img.get_width():
-        bg1.wrap(bg1.x + bg2.img.get_width())
+    if bg1.x < -bg1.width:
+        bg1.wrap(bg2.x + bg2.width)
+    if bg2.x < -bg2.width:
+        bg2.wrap(bg1.x + bg1.width)
 
     if up:
         if harness[-1].align:
