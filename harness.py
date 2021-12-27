@@ -1,4 +1,10 @@
 import pygame
+import random
+import particles as prt
+
+harness = []
+falling = []
+OnGround = []
 
 class FlyingObject:
     def __init__(self, x, y, img):
@@ -49,28 +55,25 @@ class deer(FlyingObject):
 
     def fall(self, screen, height):
         global falling, harness, OnGround
-        if self.IfFall:
-            self.angle += 5
-            self.y += self.VertSpeed
-            self.VertSpeed += 0.3
+        self.angle += 5
+        self.y += self.VertSpeed
+        self.VertSpeed += 0.3
         self.imgCopy = pygame.transform.rotate(self.img, self.angle)
         screen.blit(self.imgCopy, (self.x - int(self.imgCopy.get_width() / 2), self.y - int(self.imgCopy.get_height() / 2)))
-        if self.y > height - 150:
-            self.x -= 5
-            if self.IfFall:
-                OnGround.append(falling[0])
-                falling.pop(0)
-                self.VertSpeed = 0
-                harness[0].up = False
-                harness[0].down = False
-                harness[0].align = True
-                self.IfFall = False
+        if self.y > height - 160:
+            OnGround.append(falling[0])
+            falling.pop(0)
+            prt.CreateParticles(int(self.VertSpeed) * 5, int(self.x), int(self.y))
+            self.VertSpeed = 0
+            harness[0].up = False
+            harness[0].down = False
+            harness[0].align = True
+
+    def SlideOut(self):
+        global OnGround
+        self.x -= 5
         if self.x < 0:
             OnGround.pop(0)
-
-harness = []
-falling = []
-OnGround = []
 
 def InitializeHarness():
     global harness

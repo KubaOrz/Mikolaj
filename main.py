@@ -1,8 +1,10 @@
 import pygame
 import sys
+import random
 
 import background as bg
 import harness as hrn
+import particles as prt
 
 pygame.init()
 
@@ -44,7 +46,6 @@ while running:
                     hrn.harness[0].align = False
             if event.key == pygame.K_SPACE:
                 hrn.falling.append(hrn.harness[0])
-                hrn.falling[0].IfFall = True
                 hrn.harness.pop(0)
 
         if event.type == pygame.KEYUP:
@@ -82,12 +83,17 @@ while running:
             deer.ChangeState(hrn.harness[index - 1].y)
         deer.show(screen)
         deer.move()
+        if deer == hrn.harness[-1]:
+            prt.ContinuousParticles(deer.x, deer.y + 64, (233, random.randint(180, 220), 50), 6, -5, 0, 4, 1)
 
     for deer in hrn.falling:
         deer.fall(screen, height)
 
     for deer in hrn.OnGround:
-        deer.fall(screen, height)
+        deer.SlideOut()
+        deer.show(screen)
+
+    prt.RenderParticles(screen)
 
     snow1.slide(screen)
     snow2.slide(screen)
