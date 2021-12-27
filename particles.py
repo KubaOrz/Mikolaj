@@ -14,9 +14,9 @@ class particle():
         self.vy = random.randint(vy - rangeY, vy + rangeY)
         self.slowdown = slowdown
 
-def CreateParticles(amount, x, y):
+def CreateParticles(amount, x, y, color):
     for i in range(amount):
-        particles.append(particle(random.randint(x - 30, x + 30), random.randint(y, y + 40), random.randint(20, 40), (230, 230, 230), 0, -3, 6, 3, 1))
+        particles.append(particle(random.randint(x - 30, x + 30), random.randint(y, y + 40), random.randint(20, 40), color, 0, -3, 6, 3, 1))
 
 def RenderParticles(screen):
     global particles

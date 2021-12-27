@@ -35,10 +35,26 @@ class house:
         self.img = pygame.image.load("assets/" + HouseTypes[self.type] + ".png")
         self.ToRemove = False
         self.color = random.randint(1, 4)
+        self.rect = self.img.get_rect()
+        self.WantedGift = pygame.image.load("assets/gift" + str(self.color) + ".png")
+        self.alpha = 0
+        self.FadeOut = False
+        self.Given = False
 
     def render(self, screen):
         screen.blit(self.img, (self.x, self.y))
+        self.WantedGift.set_alpha(self.alpha)
+        screen.blit(self.WantedGift, (self.x + 50, self.y - 50))
+        if self.FadeOut == False:
+            self.alpha += 5
+            if self.alpha >= 255:
+                self.FadeOut = True
+        else:
+            self.alpha -= 5
+            if self.alpha <= 0:
+                self.FadeOut = False
         self.x -= 5
+        self.rect.update(self.x, self.y, 128, 128)
 
     def smoke(self):
         if self.type != 1:

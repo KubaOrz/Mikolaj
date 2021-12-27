@@ -46,8 +46,10 @@ while running:
                     hrn.harness[0].down = True
                     hrn.harness[0].align = False
             if event.key == pygame.K_SPACE:
-                hrn.falling.append(hrn.harness[0])
-                hrn.harness.pop(0)
+                #hrn.falling.append(hrn.harness[0])
+                #hrn.harness.pop(0)
+                color = random.randint(1, 4)
+                hrn.falling.append(hrn.gift(hrn.harness[-1].x + 20, hrn.harness[-1].y + 60, "assets/gift" + str(color) + ".png", color))
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -86,15 +88,6 @@ while running:
         if deer == hrn.harness[-1]:
             prt.ContinuousParticles(deer.x, deer.y + 64, (233, random.randint(180, 220), 50), 4, -5, 0, 4, 1, 1)
 
-    for deer in hrn.falling:
-        deer.fall(screen, height)
-
-    for deer in hrn.OnGround:
-        deer.SlideOut()
-        deer.show(screen)
-
-    prt.RenderParticles(screen)
-
     snow1.slide(screen)
     snow2.slide(screen)
 
@@ -105,8 +98,27 @@ while running:
             bg.Createhouse()
             house.ToRemove = True
             bg.HouseCount -= 1
-
     bg.RemoveHouses()
+
+    for deer in hrn.falling:
+        deer.fall(screen, height)
+
+    for deer in hrn.OnGround:
+        deer.show(screen)
+        deer.SlideOut()
+        for house in bg.houses:
+            if deer.rect.colliderect(house.rect):
+                if deer.color == house.color:
+                    if house.Given == False:
+                        prt.CreateParticles(30, int(deer.x), int(deer.y), (57, 225, 119))
+                    house.Given = True
+                else:
+                    if house.Given == False:
+                        prt.CreateParticles(30, int(deer.x), int(deer.y), (225, 60, 60))
+                    house.Given = True
+
+    prt.RenderParticles(screen)
+
     prt.ticks += 1
 
     pygame.display.update()
