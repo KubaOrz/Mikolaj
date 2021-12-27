@@ -16,7 +16,6 @@ class FlyingObject:
         self.up = False
         self.down = False
         self.align = True
-        self.IfFall = False
 
     def show(self, screen):
         screen.blit(pygame.transform.rotate(self.img, self.angle), (self.x, self.y))
@@ -74,6 +73,11 @@ class deer(FlyingObject):
         self.x -= 5
         if self.x < 0:
             OnGround.pop(0)
+
+class gift(deer):
+    def __init__(self, x, y, img, color):
+        super().__init__(x, y, img)
+        self.color = color
 
 def InitializeHarness():
     global harness

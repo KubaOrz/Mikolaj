@@ -17,6 +17,7 @@ bg1 = bg.background(0, 0, width, height, "assets/background.jpg")
 bg2 = bg.background(bg1.width, 0, width, height, "assets/background.jpg")
 snow1 = bg.background(0, 0, width, height, "assets/snow.png")
 snow2 = bg.background(bg1.width, 0, width, height, "assets/snow.png")
+bg.Createhouse()
 
 #Obiekty początkowe
 hrn.InitializeHarness()
@@ -68,7 +69,6 @@ while running:
     if bg2.x < -bg2.width:
         bg2.wrap(bg1.x + bg1.width)
         snow2.wrap(bg1.x + bg1.width)
-
     if up:
         if hrn.harness[-1].align:
             hrn.harness[0].up = True
@@ -84,7 +84,7 @@ while running:
         deer.show(screen)
         deer.move()
         if deer == hrn.harness[-1]:
-            prt.ContinuousParticles(deer.x, deer.y + 64, (233, random.randint(180, 220), 50), 6, -5, 0, 4, 1)
+            prt.ContinuousParticles(deer.x, deer.y + 64, (233, random.randint(180, 220), 50), 4, -5, 0, 4, 1, 1)
 
     for deer in hrn.falling:
         deer.fall(screen, height)
@@ -97,5 +97,17 @@ while running:
 
     snow1.slide(screen)
     snow2.slide(screen)
+
+    for house in bg.houses:
+        house.render(screen)
+        house.smoke()
+        if house.x < -128:
+            bg.Createhouse()
+            house.ToRemove = True
+            bg.HouseCount -= 1
+
+    bg.RemoveHouses()
+    prt.ticks += 1
+
     pygame.display.update()
     clock.tick(60)
