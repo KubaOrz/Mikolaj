@@ -1,4 +1,8 @@
 import pygame
+import sys
+
+def deathScreen(screen):
+    sys.exit()
 
 def menu():
     pass

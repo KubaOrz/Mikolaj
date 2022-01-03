@@ -22,6 +22,7 @@ class FlyingObject:
 
     def show(self, screen):
         screen.blit(pygame.transform.rotate(self.img, self.angle), (self.x, self.y))
+        self.rect.update(self.x, self.y, self.img.get_width(), self.img.get_height())
 
     def ChangeState(self, prevY):
         if prevY + 30 < self.y:
@@ -56,11 +57,10 @@ class deer(FlyingObject):
         self.imgCopy = self.img
         self.color = 6
 
-    def fall(self, screen, height):
+    def fall(self, screen, height, lives):
         global falling, harness, OnGround
         self.angle += 5
         self.y += self.VertSpeed
-        self.rect.update(self.x, self.y, self.img.get_width(), self.img.get_height())
         self.VertSpeed += 0.3
         self.imgCopy = pygame.transform.rotate(self.img, self.angle)
         screen.blit(self.imgCopy, (self.x - int(self.imgCopy.get_width() / 2), self.y - int(self.imgCopy.get_height() / 2)))
@@ -69,9 +69,10 @@ class deer(FlyingObject):
             falling.pop(0)
             prt.CreateParticles(int(self.VertSpeed) * 5, int(self.x), int(self.y), (230, 230, 230))
             self.VertSpeed = 0
-            harness[0].up = False
-            harness[0].down = False
-            harness[0].align = True
+            if lives > 0:
+                harness[0].up = False
+                harness[0].down = False
+                harness[0].align = True
 
     def SlideOut(self):
         global OnGround
@@ -90,12 +91,14 @@ class SnowBall():
     def __init__(self):
         self.x = random.randint(1300, 3000)
         self.y = random.randint(50, 650)
-        self.speed = random.randint(3, 7)
+        self.speed = random.randint(8, 20)
         self.size = random.randint(10, 20)
         self.rect = pygame.rect.Rect(self.x - self.size, self.y - self.size, 2 * self.size, 2 * self.size)
+        self.remove = False
 
     def throw(self, screen):
         pygame.draw.circle(screen, (255, 255, 255), (self.x, self.y), self.size)
+        self.rect.update(self.x - self.size, self.y - self.size, 2 * self.size, 2 * self.size)
         self.x -= self.speed
 
 def InitializeHarness():
@@ -105,4 +108,4 @@ def InitializeHarness():
     for i in range(3):
         harness.append(deer(x, y, "assets/deer.png"))
         x -= 80
-    harness.append(FlyingObject(x, y, 'assets/sleigh.png'))
+    harness.append(deer(x, y, 'assets/sleigh.png'))

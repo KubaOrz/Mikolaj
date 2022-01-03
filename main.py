@@ -13,6 +13,7 @@ width = 1280
 height = 720
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
+lives = 3
 
 bg1 = bg.background(0, 0, width, height, "assets/background.jpg")
 bg2 = bg.background(bg1.width, 0, width, height, "assets/background.jpg")
@@ -25,10 +26,11 @@ menu.switchAlpha(color)
 
 # Obiekty początkowe
 hrn.InitializeHarness()
-LastPos = hrn.harness[0].y
 good = 0
 bad = 0
 missed = 0
+hrn.snowBalls.append(hrn.SnowBall())
+hrn.snowBalls.append(hrn.SnowBall())
 
 # Zmienne pomocnicze
 up = False
@@ -37,8 +39,14 @@ down = False
 running = True
 
 while running:
+
+    if lives == 0 and not hrn.falling:
+        menu.deathScreen(screen)
+
     # Input
     for event in pygame.event.get():
+        if lives == 0:
+            break
         if event.type == pygame.QUIT:
             running = False
             sys.exit()
@@ -54,8 +62,6 @@ while running:
                     hrn.harness[0].down = True
                     hrn.harness[0].align = False
             if event.key == pygame.K_SPACE:
-                # hrn.falling.append(hrn.harness[0])
-                # hrn.harness.pop(0)
                 hrn.falling.append(hrn.gift(hrn.harness[-1].x + 20, hrn.harness[-1].y + 60, "assets/gift" + str(color) + ".png", color))
             if event.key == pygame.K_1:
                 color = 1
@@ -79,6 +85,11 @@ while running:
                 down = False
                 hrn.harness[0].down = False
                 hrn.harness[0].align = True
+
+    if lives == 0:
+        up = False
+        down = False
+        align = False
 
     # Przesuwanie tła
     bg1.slide(screen)
@@ -123,8 +134,29 @@ while running:
             bg.HouseCount -= 1
     bg.RemoveHouses()
 
+    for snowball in hrn.snowBalls:
+        snowball.throw(screen)
+        for deer in hrn.harness:
+            if snowball.rect.colliderect(deer.rect):
+                hrn.falling.append(hrn.harness[0])
+                hrn.harness.pop(0)
+                lives -= 1
+                prt.CreateParticles(30, int(deer.x), int(deer.y), (255, 225, 219))
+                snowball.remove = True
+                if lives == 0:
+                    hrn.falling.append(hrn.harness[0])
+                    hrn.harness.pop(0)
+
+        if snowball.x < -snowball.size:
+            snowball.remove = True
+
+    for snowball in hrn.snowBalls:
+        if snowball.remove:
+            hrn.snowBalls.remove(snowball)
+            hrn.snowBalls.append(hrn.SnowBall())
+
     for deer in hrn.falling:
-        deer.fall(screen, height)
+        deer.fall(screen, height, lives)
 
     for deer in hrn.OnGround:
         deer.show(screen)
