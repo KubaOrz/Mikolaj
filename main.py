@@ -41,6 +41,7 @@ running = True
 while running:
 
     if lives == 0 and not hrn.falling:
+        running = False
         menu.deathScreen(screen)
 
     # Input
