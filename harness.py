@@ -6,6 +6,7 @@ harness = []
 falling = []
 OnGround = []
 gifts = []
+snowBalls = []
 
 class FlyingObject:
     def __init__(self, x, y, img):
@@ -84,6 +85,18 @@ class gift(deer):
         super().__init__(x, y, img)
         self.color = color
         self.img = pygame.transform.scale(self.img, (32, 32))
+
+class SnowBall():
+    def __init__(self):
+        self.x = random.randint(1300, 3000)
+        self.y = random.randint(50, 650)
+        self.speed = random.randint(3, 7)
+        self.size = random.randint(10, 20)
+        self.rect = pygame.rect.Rect(self.x - self.size, self.y - self.size, 2 * self.size, 2 * self.size)
+
+    def throw(self, screen):
+        pygame.draw.circle(screen, (255, 255, 255), (self.x, self.y), self.size)
+        self.x -= self.speed
 
 def InitializeHarness():
     global harness

@@ -5,6 +5,7 @@ import random
 import background as bg
 import harness as hrn
 import particles as prt
+import menu as menu
 
 pygame.init()
 
@@ -18,18 +19,25 @@ bg2 = bg.background(bg1.width, 0, width, height, "assets/background.jpg")
 snow1 = bg.background(0, 0, width, height, "assets/snow.png")
 snow2 = bg.background(bg1.width, 0, width, height, "assets/snow.png")
 bg.Createhouse()
+menu.loadImages()
+color = random.randint(1, 4)
+menu.switchAlpha(color)
 
-#Obiekty początkowe
+# Obiekty początkowe
 hrn.InitializeHarness()
+LastPos = hrn.harness[0].y
+good = 0
+bad = 0
+missed = 0
 
-#Zmienne pomocnicze
+# Zmienne pomocnicze
 up = False
 down = False
 
 running = True
 
 while running:
-    #Input
+    # Input
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -46,10 +54,21 @@ while running:
                     hrn.harness[0].down = True
                     hrn.harness[0].align = False
             if event.key == pygame.K_SPACE:
-                #hrn.falling.append(hrn.harness[0])
-                #hrn.harness.pop(0)
-                color = random.randint(1, 4)
+                # hrn.falling.append(hrn.harness[0])
+                # hrn.harness.pop(0)
                 hrn.falling.append(hrn.gift(hrn.harness[-1].x + 20, hrn.harness[-1].y + 60, "assets/gift" + str(color) + ".png", color))
+            if event.key == pygame.K_1:
+                color = 1
+                menu.switchAlpha(color)
+            if event.key == pygame.K_2:
+                color = 2
+                menu.switchAlpha(color)
+            if event.key == pygame.K_3:
+                color = 3
+                menu.switchAlpha(color)
+            if event.key == pygame.K_4:
+                color = 4
+                menu.switchAlpha(color)
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -61,9 +80,11 @@ while running:
                 hrn.harness[0].down = False
                 hrn.harness[0].align = True
 
-    #Przesuwanie tła
+    # Przesuwanie tła
     bg1.slide(screen)
     bg2.slide(screen)
+
+    menu.gifts(screen)
 
     if bg1.x < -bg1.width:
         bg1.wrap(bg2.x + bg2.width)
@@ -95,6 +116,8 @@ while running:
         house.render(screen)
         house.smoke()
         if house.x < -128:
+            if not house.Given:
+                missed += 1
             bg.Createhouse()
             house.ToRemove = True
             bg.HouseCount -= 1
@@ -109,12 +132,14 @@ while running:
         for house in bg.houses:
             if deer.rect.colliderect(house.rect):
                 if deer.color == house.color:
-                    if house.Given == False:
+                    if not house.Given:
                         prt.CreateParticles(30, int(deer.x), int(deer.y), (57, 225, 119))
+                        good += 1
                     house.Given = True
                 else:
-                    if house.Given == False:
+                    if not house.Given:
                         prt.CreateParticles(30, int(deer.x), int(deer.y), (225, 60, 60))
+                        bad += 1
                     house.Given = True
 
     prt.RenderParticles(screen)
