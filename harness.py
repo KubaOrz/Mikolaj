@@ -13,7 +13,7 @@ class FlyingObject:
         self.x = x
         self.y = y
         self.VertSpeed = 0
-        self.img = pygame.image.load(img)
+        self.img = pygame.image.load(img).convert_alpha()
         self.angle = 0
         self.up = False
         self.down = False

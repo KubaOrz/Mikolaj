@@ -9,7 +9,7 @@ class background:
         self.y = y
         self.width = width
         self.height = height
-        self.img = pygame.image.load(img)
+        self.img = pygame.image.load(img).convert_alpha()
         self.img = pygame.transform.scale(self.img, (width, height))
 
     def slide(self, screen):
@@ -32,11 +32,11 @@ class house:
         self.x = x
         self.y = y
         self.type = random.randint(1, 3)
-        self.img = pygame.image.load("assets/" + HouseTypes[self.type] + ".png")
+        self.img = pygame.image.load("assets/" + HouseTypes[self.type] + ".png").convert_alpha()
         self.ToRemove = False
         self.color = random.randint(1, 4)
         self.rect = self.img.get_rect()
-        self.WantedGift = pygame.image.load("assets/gift" + str(self.color) + ".png")
+        self.WantedGift = pygame.image.load("assets/gift" + str(self.color) + ".png").convert_alpha()
         self.alpha = 0
         self.FadeOut = False
         self.Given = False
